@@ -4,6 +4,7 @@
 #include "Defines.h"
 #include "Track.h"
 #include "Audio.h"
+#include "Gpio.h"
 // #include "Midi.h"
 
 // #include <sndfile.h>
@@ -35,10 +36,17 @@ int main(int argc, const char * argv[])
         tracks[i] = new Track(i, inputChannelLeft, inputChannelRight);
 
     Audio audio(tracks);
+    Gpio gpio(tracks);
     // Midi midi(tracks);
 
     if (!audio.open(audioDeviceIndex))
         return 1;
+
+    if (!gpio.open())
+    {
+        audio.close();
+        return 1;
+    }
 
     // if (!midi.open(midiDeviceIndex))
     // {
@@ -50,6 +58,7 @@ int main(int argc, const char * argv[])
         usleep(1000000);
 
     // midi.close();
+    gpio.close();
     audio.close();
 
     return 0;

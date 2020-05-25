@@ -4,6 +4,8 @@
 #define AUDIO_SAMPLE_RATE   44100 // Hz
 #define AUDIO_BUFFER_SIZE   1024  // frames
 
+#define GPIO_TIMER_INTERVAL 1000 // ms
+
 #define MIDI_TIMER_INTERVAL 1   // ms
 #define MIDI_IN_BUFFER_SIZE 100 // messages
 
