@@ -42,7 +42,7 @@ int main(int argc, const char * argv[])
     if (!audio.open(audioDeviceIndex))
         return 1;
 
-    if (!gpio.open())
+    if (!gpio.start())
     {
         audio.close();
         return 1;
@@ -58,7 +58,7 @@ int main(int argc, const char * argv[])
         usleep(1000000);
 
     // midi.close();
-    gpio.close();
+    gpio.stop();
     audio.close();
 
     return 0;

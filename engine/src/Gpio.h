@@ -31,7 +31,7 @@ public:
     ~Gpio()
     { }
 
-    bool open()
+    bool start()
     {
         string fileName = "/dev/i2c-" + to_string(I2C_BUS_NUMBER);
 
@@ -63,7 +63,7 @@ public:
         return true;
     }
 
-    void close()
+    void stop()
     {
         Pt_Stop();
     }
