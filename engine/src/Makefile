@@ -6,7 +6,7 @@ LDFLAGS  =
 LDLIBS   = -lportaudio # -lportmidi -lsndfile -lfftw3f
 
 TARGET  = engine
-OBJECTS = Main.o
+OBJECTS = Main.o porttime.o
 
 all: $(TARGET)
 
