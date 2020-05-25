@@ -3,7 +3,17 @@
 
 #include <iostream>
 #include <cmath>
-#include <wiringPi.h>
+#include <string>
+#include <stdint.h>
+
+// Needed for I2C port
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <linux/i2c-dev.h>
+
+// Needed for GPIO pins
+// #include <wiringPi.h>
 
 #include "porttime.h"
 #include "Defines.h"
@@ -23,7 +33,21 @@ public:
 
     bool open()
     {
-        cout << "[Gpio] Starting GPIO timer callback." << endl;
+        string fileName = "/dev/i2c-" + to_string(I2C_BUS_NUMBER);
+
+        if ((i2cFile = open(fileName.c_str(), O_RDWR)) < 0)
+        {
+            cout << "[Gpio] Failed to open the i2c bus." << endl;
+            return false;
+        }
+
+        if (ioctl(i2cFile, I2C_SLAVE, I2C_SLAVE_ADDRESS) < 0)
+        {
+            cout << "[Gpio] Failed to acquire bus access and/or talk to the i2c slave." << endl;
+            return false;
+        }
+
+        // writeSensorValue(i2cFile, 0x00, 0); // Set something
 
         PtError ptError = Pt_Start(
             GPIO_TIMER_INTERVAL,
@@ -45,15 +69,57 @@ public:
     }
 
 private:
+    bool writeSensorValue(int fd, byte reg, byte val)
+    {
+        const int size = 2;
+        byte buf[size] = { reg, val };
+
+        if (write(fd, buf, size) != size)
+        {
+            cout << "[Gpio] Failed to write to the i2c bus." << endl;
+            return false;
+        }
+
+        return true;
+    }
+
+    bool readSensorValues(int fd, byte reg, byte * buf, int size)
+    {
+        if (write(fd, &reg, 1) != 1)
+        {
+            cout << "[Gpio] Failed to write to the i2c bus." << endl;
+            return false;
+        }
+
+        if (read(fd, buf, size) != size)
+        {
+            cout << "[Gpio] Failed to read from the i2c bus." << endl;
+            return false;
+        }
+
+        return true;
+    }
+
     void ptCallbackMethod(PtTimestamp timeStamp)
     {
-        cout << "GPIO callback called: " << timeStamp << endl;
+        readSensorValues(i2cFile, 0x3B, i2cBuffer, I2C_BUFFER_SIZE);
+
+        cout << "New sensor value: ";
+
+        int16_t * buf = (int16_t *)i2cBuffer;
+        for (int i = 0; i < I2C_BUFFER_SIZE / 2; ++i)
+            cout << buf[i] << " ";
+
+        cout << endl;
     }
 
     static void ptCallback(PtTimestamp timeStamp, void * userData)
     {
         ((Gpio *) userData)->ptCallbackMethod(timeStamp);
     }
+
+    int i2cFile;
+    byte i2cBuffer[I2C_BUFFER_SIZE];
 
     Track ** tracks;
 };

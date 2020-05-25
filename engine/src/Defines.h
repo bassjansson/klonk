@@ -8,6 +8,10 @@
 
 #define GPIO_TIMER_INTERVAL 1000 // ms
 
+#define I2C_BUS_NUMBER      1 // 1 = Hardware I2C, 3 = Software I2C
+#define I2C_SLAVE_ADDRESS   0x68
+#define I2C_BUFFER_SIZE     6
+
 #define MIDI_TIMER_INTERVAL 1   // ms
 #define MIDI_IN_BUFFER_SIZE 100 // messages
 
@@ -17,5 +21,6 @@
 #define RIGHT               1
 
 typedef unsigned long long frame_t;
+typedef unsigned char byte;
 
 #endif // __DEFINES_H__
