@@ -7,6 +7,9 @@
 
 /* Should there be a way to choose the source of time here? */
 
+#ifndef __PORTTIME_H__
+#define __PORTTIME_H__
+
 #include <stdint.h> // needed for int32_t
 
 #ifdef __cplusplus
@@ -71,3 +74,5 @@ void Pt_Sleep(int32_t duration);
 #ifdef __cplusplus
 }
 #endif
+
+#endif // __PORTTIME_H__
