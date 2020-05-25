@@ -100,15 +100,20 @@ private:
         return true;
     }
 
+    int bytePairToInt(byte * pair)
+    {
+        byte flip[2] = { pair[1], pair[0] };
+        return ((int16_t *)flip)[0];
+    }
+
     void ptCallbackMethod(PtTimestamp timeStamp)
     {
         readSensorValues(i2cFile, 0x3B, i2cBuffer, I2C_BUFFER_SIZE);
 
         cout << "New sensor value: ";
 
-        int16_t * buf = (int16_t *)i2cBuffer;
-        for (int i = 0; i < I2C_BUFFER_SIZE / 2; ++i)
-            cout << buf[i] << " ";
+        for (int i = 0; i < I2C_BUFFER_SIZE; i += 2)
+            cout << bytePairToInt(i2cBuffer + i) / 16384.0f << " ";
 
         cout << endl;
     }
