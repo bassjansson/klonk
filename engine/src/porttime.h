@@ -9,6 +9,10 @@
 
 #include <stdint.h> // needed for int32_t
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum
 {
     ptNoError   = 0,      /* success */
@@ -63,3 +67,7 @@ PtTimestamp Pt_Time();
  *  as determined by resolution in Pt_Start().
  */
 void Pt_Sleep(int32_t duration);
+
+#ifdef __cplusplus
+}
+#endif
