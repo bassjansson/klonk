@@ -103,19 +103,19 @@ private:
     int bytePairToInt(byte * pair)
     {
         byte flip[2] = { pair[1], pair[0] };
-        return ((int16_t *)flip)[0];
+
+        return ((int16_t *) flip)[0];
     }
 
     void ptCallbackMethod(PtTimestamp timeStamp)
     {
         readSensorValues(i2cFile, 0x3B, i2cBuffer, I2C_BUFFER_SIZE);
 
-        cout << "New sensor value: ";
+        float z    = bytePairToInt(i2cBuffer + 4) / 16384.0f;
+        float freq = z * 100.0f + 350.0f;
 
-        for (int i = 0; i < I2C_BUFFER_SIZE; i += 2)
-            cout << bytePairToInt(i2cBuffer + i) / 16384.0f << " ";
-
-        cout << endl;
+        for (int i = 0; i < NUMBER_OF_TRACKS; ++i)
+            tracks[i]->setFrequency(freq);
     }
 
     static void ptCallback(PtTimestamp timeStamp, void * userData)

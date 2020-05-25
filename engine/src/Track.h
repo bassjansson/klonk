@@ -23,6 +23,11 @@ public:
     ~Track()
     { }
 
+    void setFrequency(float freq)
+    {
+        frequency = freq;
+    }
+
     void process(
         const float * inputBuffer,
         float *       outputBuffer,

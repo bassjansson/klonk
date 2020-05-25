@@ -6,7 +6,7 @@
 #define AUDIO_CHANNELS_IN   0
 #define AUDIO_CHANNELS_OUT  2
 
-#define GPIO_TIMER_INTERVAL 1000 // ms
+#define GPIO_TIMER_INTERVAL 10 // ms
 
 #define I2C_BUS_NUMBER      1 // 1 = Hardware I2C, 3 = Software I2C
 #define I2C_SLAVE_ADDRESS   0x68
