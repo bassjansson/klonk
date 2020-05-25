@@ -3,6 +3,8 @@
 
 #define AUDIO_SAMPLE_RATE   44100 // Hz
 #define AUDIO_BUFFER_SIZE   1024  // frames
+#define AUDIO_CHANNELS_IN   0
+#define AUDIO_CHANNELS_OUT  2
 
 #define GPIO_TIMER_INTERVAL 1000 // ms
 
