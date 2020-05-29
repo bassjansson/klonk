@@ -6,7 +6,7 @@ LDFLAGS  =
 LDLIBS   = -pthread -lportaudio # -lwiringPi -lportmidi -lsndfile -lfftw3f
 
 TARGET  = engine
-OBJECTS = Main.o porttime.o
+OBJECTS = Main.o porttime.o WaveTable.o
 
 all: $(TARGET)
 

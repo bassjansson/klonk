@@ -5,6 +5,7 @@
 #include <cmath>
 
 #include "Defines.h"
+#include "WaveTable.h"
 
 using namespace std;
 
@@ -18,7 +19,9 @@ public:
         frequency(500.0f),
         phase(0.0f),
         currentPhaseStep(0.0f)
-    { }
+    {
+        waveTable.generateSawWave();
+    }
 
     ~Track()
     { }
@@ -40,10 +43,10 @@ public:
 
         for (frame_t i = 0; i < framesPerBuffer; ++i)
         {
-            float sine = sin(phase * 2.0f * M_PI) * 0.5f;
+            float osc = waveTable[phase] * 0.5f;
 
-            outputBuffer[i * numOutputChannels + LEFT]  += sine;
-            outputBuffer[i * numOutputChannels + RIGHT] += sine;
+            outputBuffer[i * numOutputChannels + LEFT]  += osc;
+            outputBuffer[i * numOutputChannels + RIGHT] += osc;
 
             float slope     = (float) i / framesPerBuffer;
             float phaseStep = (1.0f - slope) * currentPhaseStep + slope * targetPhaseStep;
@@ -62,6 +65,8 @@ private:
     float frequency;
     float phase;
     float currentPhaseStep;
+
+    WaveTable waveTable;
 };
 
 #endif // __TRACK_H__
