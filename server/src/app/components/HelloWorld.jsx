@@ -1,10 +1,9 @@
 // Import packages
 import React from 'react'
-import { Button } from 'react-bootstrap'
+import { Container, Button } from 'react-bootstrap'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCoffee } from '@fortawesome/free-solid-svg-icons'
-import { faFontAwesome } from '@fortawesome/free-brands-svg-icons'
+import { faLightbulb } from '@fortawesome/free-solid-svg-icons'
 
 // Define component class
 export default class HelloWorld extends React.Component {
@@ -12,24 +11,29 @@ export default class HelloWorld extends React.Component {
         super(props)
 
         this.state = {
-            text: "Hello World"
+            led: false
         }
+    }
+
+    turnLedOnOff = (e) => {
+        let newLedState = !this.state.led
+
+        //this.props.socket.emit('msg', { led: newLedState })
+
+        this.setState({ led: newLedState })
     }
 
     render() {
         return (
-            <div>
-                <p>{`${this.state.text} ${this.props.name}! :)`}</p>
-                <Button onClick={e => this.setState({ text: "You Rock!" })}>
-                    Click Me
+            <Container className='border m-4 p-4'>
+                <Button onClick={this.turnLedOnOff}>
+                    {this.state.led ? 'Turn LED off' : 'Turn LED on'}
                 </Button>
-                <p style={{ fontSize: '24px' }}>
-                    With some
-                    <FontAwesomeIcon className='fa-icon' icon={faCoffee} spin />
-                    we got amazing icons to work! Thank you
-                    <FontAwesomeIcon className='fa-icon' icon={faFontAwesome} transform={{ rotate: 20 }} />
-                </p>
-            </div>
+                <FontAwesomeIcon
+                    className='fa-icon h2'
+                    icon={faLightbulb}
+                    style={{color: this.state.led ? 'orange' : 'lightgrey' }}/>
+            </Container>
         )
     }
 }
