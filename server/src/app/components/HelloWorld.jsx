@@ -18,7 +18,7 @@ export default class HelloWorld extends React.Component {
     turnLedOnOff = (e) => {
         let newLedState = !this.state.led
 
-        //this.props.socket.emit('msg', { led: newLedState })
+        this.props.socket.emit('msg', { led: newLedState })
 
         this.setState({ led: newLedState })
     }

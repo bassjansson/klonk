@@ -1,5 +1,6 @@
 // Import packages
 import React from 'react'
+import io from 'socket.io-client'
 
 // Import components
 import HelloWorld from './HelloWorld'
@@ -9,15 +10,18 @@ export default class App extends React.Component {
     constructor(props) {
         super(props)
 
+        this.socket = io('http://localhost:3000')
+        this.socket.on('connect', () => console.log('Socket connected!'))
+
         this.state = {
-            name: "Klonk"
+
         }
     }
 
     render() {
         return (
             <div>
-                <HelloWorld name={this.state.name}/>
+                <HelloWorld socket={this.socket}/>
             </div>
         )
     }
