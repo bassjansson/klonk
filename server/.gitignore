@@ -1,0 +1,12 @@
+# OSX
+.DS_Store
+
+# Node
+/node_modules
+
+# Webpack
+/public/*.js
+/public/*.html
+
+# TypeScript
+/lib
