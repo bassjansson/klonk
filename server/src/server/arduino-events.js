@@ -6,9 +6,9 @@ const Arduino = require('./arduino.js')
 const arduinoEvents = new EventEmitter()
 
 // Create the arduino instances
-const piPort = '/dev/ttyAMA0'
+const piPort = '/dev/ttyACM0'
 const macPort = '/dev/cu.usbmodem14201'
-const testArduino = new Arduino(macPort)
+const testArduino = new Arduino(piPort)
 
 
 //========================================//

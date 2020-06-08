@@ -10,7 +10,7 @@ export default class App extends React.Component {
     constructor(props) {
         super(props)
 
-        this.socket = io('http://localhost:3000')
+        this.socket = io() // io('http://localhost:3000')
         this.socket.on('connect', () => console.log('Socket connected!'))
 
         this.state = {
