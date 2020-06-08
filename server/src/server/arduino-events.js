@@ -29,12 +29,12 @@ arduinoEvents.sendLedValue = value => {
 
 testArduino.receiveSensorData(sensorData => {
     if (sensorData.sensor == 200) { // SENSOR_POT
-        let value = sensorData.data[0] / 1024.0
+        let value = sensorData.data[0] / 1023.0
 
         if (value < 0.0) value = 0.0
         if (value > 1.0) value = 1.0
 
-        arduinoEvents.emit('pot-meter', value)
+        arduinoEvents.emit('pot-meter', Math.floor(value * 100.0))
     }
 })
 
