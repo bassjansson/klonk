@@ -11,8 +11,15 @@ export default class HelloWorld extends React.Component {
         super(props)
 
         this.state = {
-            led: false
+            led: false,
+            pot: 0
         }
+    }
+
+    componentDidMount() {
+        this.props.socket.on('msg', msg => {
+            if (msg.pot) this.setState({ pot: msg.pot.value })
+        })
     }
 
     turnLedOnOff = (e) => {
@@ -32,7 +39,10 @@ export default class HelloWorld extends React.Component {
                 <FontAwesomeIcon
                     className='fa-icon h2'
                     icon={faLightbulb}
-                    style={{color: this.state.led ? 'orange' : 'lightgrey' }}/>
+                    style={{color: this.state.led ? 'orange' : 'grey' }}/>
+                <br/>
+                <br/>
+                <b>Pot value: </b>{this.state.pot}
             </Container>
         )
     }
