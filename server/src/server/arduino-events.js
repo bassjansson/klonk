@@ -1,12 +1,14 @@
 // Require event emmitter and arduino class
 const EventEmitter = require('events').EventEmitter
-const Arduino = require('../arduino.js')
+const Arduino = require('./arduino.js')
 
 // Create an arduino events instance
 const arduinoEvents = new EventEmitter()
 
 // Create the arduino instances
-const testArduino = new Arduino('/dev/ttyAMA0')
+const piPort = '/dev/ttyAMA0'
+const macPort = '/dev/cu.usbmodem14201'
+const testArduino = new Arduino(macPort)
 
 
 //========================================//

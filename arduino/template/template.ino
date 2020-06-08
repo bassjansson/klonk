@@ -34,7 +34,8 @@ String controlDataString = "";
 //=================================//
 
 #define SENSOR_DATA_SIZE  1  // 1 POT meter
-#define SENSOR_POT        200
+#define SENSOR_ID_OFFSET  200
+#define SENSOR_POT        0
 
 uint32_t sensorData[SENSOR_DATA_SIZE];
 unsigned long previousSendTime = 0;
@@ -97,7 +98,7 @@ void sendSensorValue(uint16_t sensor, uint32_t value)
 
     sensorData[sensor] = value;
 
-    Serial.print(sensor);
+    Serial.print(sensor + SENSOR_ID_OFFSET);
     Serial.print(DATA_DELIMITER);
     Serial.print(value);
     Serial.print(DATA_ENDLINE);
