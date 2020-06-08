@@ -5,8 +5,8 @@
 /node_modules
 
 # Webpack
-/public/*.js
-/public/*.html
+#/public/*.js
+#/public/*.html
 
 # TypeScript
 /lib
