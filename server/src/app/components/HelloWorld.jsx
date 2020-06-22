@@ -12,7 +12,8 @@ export default class HelloWorld extends React.Component {
 
         this.state = {
             led: false,
-            pot: 0
+            pot: 0,
+            sliderValue: 100
         }
     }
 
@@ -30,6 +31,14 @@ export default class HelloWorld extends React.Component {
         this.setState({ led: newLedState })
     }
 
+    onSliderChange = (e) => {
+        let freq = e.target.value
+
+        this.props.socket.emit('audio-control', { key: 'freq', value: freq })
+
+        this.setState({ sliderValue: freq })
+    }
+
     render() {
         return (
             <Container className='border m-4 p-4'>
@@ -43,6 +52,14 @@ export default class HelloWorld extends React.Component {
                 <br/>
                 <br/>
                 <b>Pot value: </b>{this.state.pot}
+
+                <br/>
+                <br/>
+                <b>Frequency:</b>
+                <input type="range" min="30" max="200" value={this.state.sliderValue}
+                    onChange={this.onSliderChange}/>
+                {this.state.sliderValue}
+
             </Container>
         )
     }
