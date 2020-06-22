@@ -4,6 +4,7 @@
 #include "Defines.h"
 #include "Track.h"
 #include "Audio.h"
+#include "Mqtt.h"
 // #include "Gpio.h"
 // #include "Midi.h"
 
@@ -36,11 +37,14 @@ int main(int argc, const char * argv[])
         tracks[i] = new Track(i, inputChannelLeft, inputChannelRight);
 
     Audio audio(tracks);
+    Mqtt mqtt(tracks);
     // Gpio gpio(tracks);
     // Midi midi(tracks);
 
     if (!audio.open(audioDeviceIndex))
         return 1;
+
+    mqtt.connect();
 
     // if (!gpio.start())
     // {
@@ -55,10 +59,11 @@ int main(int argc, const char * argv[])
     // }
 
     while (true)
-        usleep(1000000);
+        usleep(1000000L);
 
     // midi.close();
     // gpio.stop();
+    mqtt.disconnect();
     audio.close();
 
     return 0;

@@ -15,6 +15,13 @@
 #define MIDI_TIMER_INTERVAL 1   // ms
 #define MIDI_IN_BUFFER_SIZE 100 // messages
 
+#define MQTT_BROKER_ADDRESS "tcp://localhost:1883"
+#define MQTT_CLIENT_ID      "audio-engine"
+#define MQTT_TOPIC          "testtopic"
+#define MQTT_QOS            1
+#define MQTT_KEEP_ALIVE_INT 20
+#define MQTT_RETRY_INTERVAL 1000000L // 1 sec
+
 #define NUMBER_OF_TRACKS    1
 
 #define LEFT                0
