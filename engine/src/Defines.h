@@ -17,7 +17,7 @@
 
 #define MQTT_BROKER_ADDRESS "tcp://localhost:1883"
 #define MQTT_CLIENT_ID      "audio-engine"
-#define MQTT_TOPIC          "testtopic"
+#define MQTT_TOPIC          "audio-control"
 #define MQTT_QOS            1
 #define MQTT_KEEP_ALIVE_INT 20
 #define MQTT_RETRY_INTERVAL 1000000L // 1 sec

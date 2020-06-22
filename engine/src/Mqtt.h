@@ -94,7 +94,6 @@ public:
 private:
     static void onConnect(void * context, MQTTAsync_successData * response)
     {
-        // MQTTAsync client = (MQTTAsync) context;
         // deliveredtoken = 0; // TODO: Is this needed?
 
         printf("[Mqtt] Connect succeeded.\n");
@@ -148,7 +147,7 @@ private:
 
     static int onMessage(void * context, char * topicName, int topicLen, MQTTAsync_message * message)
     {
-        printf("[Mqtt] Message received on topic '%s':\n", topicName);
+        // printf("[Mqtt] Message received on topic '%s':   ", topicName);
 
         ((Mqtt *) context)->onMessage(message->payload, message->payloadlen);
 
@@ -160,14 +159,15 @@ private:
 
     void onMessage(void * data, int size)
     {
-        char * msg = (char *) data;
+        string msg  = string((char *) data, size);
+        int pos     = msg.find(',');
+        string key  = msg.substr(0, pos);
+        float value = atof(msg.substr(pos + 1).c_str());
 
-        for (int i = 0; i < size; ++i)
-            putchar(msg[i]);
+        // printf("key=%s value=%f\n", key.c_str(), value);
 
-        putchar('\n');
-
-        // TODO: send data to tracks here
+        if (key == "freq")
+            tracks[0]->setFrequency(value);
     }
 
     Track ** tracks;
