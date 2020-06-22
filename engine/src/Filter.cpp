@@ -23,14 +23,14 @@ float Filter::process(float input)
     return y;
 }
 
-float Filter::setFrequency(float freq)
+void Filter::setFrequency(float freq)
 {
     frequency = freq;
 
     generateCoefficients();
 }
 
-float Filter::setResonance(float res)
+void Filter::setResonance(float res)
 {
     resonance = res;
 

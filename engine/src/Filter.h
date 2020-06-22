@@ -4,7 +4,7 @@
 #include <iostream>
 #include <cmath>
 
-#include "Defines"
+#include "Defines.h"
 
 using namespace std;
 
@@ -16,8 +16,8 @@ public:
 
     float process(float input);
 
-    float setFrequency(float freq);
-    float setResonance(float res);
+    void setFrequency(float freq);
+    void setResonance(float res);
 
 private:
     void generateCoefficients();
