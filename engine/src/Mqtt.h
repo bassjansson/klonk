@@ -23,7 +23,7 @@ public:
         : tracks(tracks)
     {
         MQTTAsync_create(&client, MQTT_BROKER_ADDRESS, MQTT_CLIENT_ID, MQTTCLIENT_PERSISTENCE_NONE, NULL);
-        MQTTAsync_setCallbacks(client, client, onConnectionLost, onMessage, NULL);
+        MQTTAsync_setCallbacks(client, this, onConnectionLost, onMessage, NULL);
     }
 
     ~Mqtt()
@@ -33,7 +33,7 @@ public:
 
     void connect()
     {
-        printf("[Mqtt] Connecting client '%s'.", MQTT_CLIENT_ID);
+        printf("[Mqtt] Connecting client '%s'.\n", MQTT_CLIENT_ID);
 
         MQTTAsync_connectOptions connectOptions = MQTTAsync_connectOptions_initializer;
 
@@ -42,7 +42,7 @@ public:
 
         connectOptions.onSuccess = onConnect;
         connectOptions.onFailure = onConnectFailure;
-        connectOptions.context   = client;
+        connectOptions.context   = this;
 
         int errorCode = MQTTAsync_connect(client, &connectOptions);
 
@@ -61,7 +61,7 @@ public:
 
         subscribeOptions.onSuccess = onSubscribe;
         subscribeOptions.onFailure = onSubscribeFailure;
-        subscribeOptions.context   = client;
+        subscribeOptions.context   = this;
 
         int errorCode = MQTTAsync_subscribe(client, MQTT_TOPIC, MQTT_QOS, &subscribeOptions);
 
@@ -74,13 +74,13 @@ public:
 
     void disconnect()
     {
-        printf("[Mqtt] Disconnecting client '%s'.", MQTT_CLIENT_ID);
+        printf("[Mqtt] Disconnecting client '%s'.\n", MQTT_CLIENT_ID);
 
         MQTTAsync_disconnectOptions disconnectOptions = MQTTAsync_disconnectOptions_initializer;
 
         disconnectOptions.onSuccess = onDisconnect;
         disconnectOptions.onFailure = onDisconnectFailure;
-        disconnectOptions.context   = client;
+        disconnectOptions.context   = this;
 
         int errorCode = MQTTAsync_disconnect(client, &disconnectOptions);
 
@@ -92,77 +92,82 @@ public:
     }
 
 private:
-    void onConnect(void * context, MQTTAsync_successData * response)
+    static void onConnect(void * context, MQTTAsync_successData * response)
     {
         // MQTTAsync client = (MQTTAsync) context;
         // deliveredtoken = 0; // TODO: Is this needed?
 
         printf("[Mqtt] Connect succeeded.\n");
 
-        subscribe();
+        ((Mqtt *) context)->subscribe();
     }
 
-    void onConnectFailure(void * context, MQTTAsync_failureData * response)
+    static void onConnectFailure(void * context, MQTTAsync_failureData * response)
     {
         printf("[Mqtt] Connect failed, error code: %d\n", response ? response->code : 0);
 
         usleep(MQTT_RETRY_INTERVAL);
 
-        connect();
+        ((Mqtt *) context)->connect();
     }
 
-    void onSubscribe(void * context, MQTTAsync_successData * response)
+    static void onSubscribe(void * context, MQTTAsync_successData * response)
     {
         printf("[Mqtt] Subscribe succeeded.\n");
     }
 
-    void onSubscribeFailure(void * context, MQTTAsync_failureData * response)
+    static void onSubscribeFailure(void * context, MQTTAsync_failureData * response)
     {
         printf("[Mqtt] Subscribe failed, error code: %d\n", response ? response->code : 0);
 
         usleep(MQTT_RETRY_INTERVAL);
 
-        subscribe();
+        ((Mqtt *) context)->subscribe();
     }
 
-    void onDisconnect(void * context, MQTTAsync_successData * response)
+    static void onDisconnect(void * context, MQTTAsync_successData * response)
     {
         printf("[Mqtt] Disconnect succeeded.\n");
     }
 
-    void onDisconnectFailure(void * context, MQTTAsync_failureData * response)
+    static void onDisconnectFailure(void * context, MQTTAsync_failureData * response)
     {
         printf("[Mqtt] Disconnect failed, error code: %d\n", response ? response->code : 0);
 
         usleep(MQTT_RETRY_INTERVAL);
 
-        disconnect();
+        ((Mqtt *) context)->disconnect();
     }
 
-    void onConnectionLost(void * context, char * cause)
+    static void onConnectionLost(void * context, char * cause)
     {
         printf("[Mqtt] Lost connection to broker, cause: %s\n", cause ? cause : "Unknown");
 
-        connect();
+        ((Mqtt *) context)->connect();
     }
 
-    int onMessage(void * context, char * topicName, int topicLen, MQTTAsync_message * message)
+    static int onMessage(void * context, char * topicName, int topicLen, MQTTAsync_message * message)
     {
-        // TODO: send data to tracks here
-
         printf("[Mqtt] Message received on topic '%s':\n", topicName);
 
-        char * payloadptr = (char *) message->payload;
-
-        for (int i = 0; i < message->payloadlen; i++)
-            putchar(*payloadptr++);
-
-        putchar('\n');
+        ((Mqtt *) context)->onMessage(message->payload, message->payloadlen);
 
         MQTTAsync_freeMessage(&message);
         MQTTAsync_free(topicName);
 
         return 1;
+    }
+
+    void onMessage(void * data, int size)
+    {
+        char * msg = (char *) data;
+
+        for (int i = 0; i < size; ++i)
+            putchar(msg[i]);
+
+        putchar('\n');
+
+        // TODO: send data to tracks here
     }
 
     Track ** tracks;
